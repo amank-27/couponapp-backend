@@ -24,9 +24,14 @@ const ipClaims = {};
 
 const COUPON_TIME_FRAME = 60 * 60 * 1000; // 1 hour in milliseconds
 
+// Function to get the real IP address, considering proxies
+const getClientIp = (req) => {
+  return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+};
+
 // Endpoint to claim a coupon
 app.get('/claim-coupon', async (req, res) => {
-  const ip = req.ip;  // Using Express's built-in req.ip to get the client's IP address
+  const ip = getClientIp(req);  // Using the helper function to get the real IP
   const now = Date.now();
 
   // Check if IP has claimed a coupon recently
